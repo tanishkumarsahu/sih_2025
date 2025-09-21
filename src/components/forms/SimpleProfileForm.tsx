@@ -865,9 +865,19 @@ export function SimpleProfileForm({ onComplete, currentLanguage }: SimpleProfile
                 size={{ base: "md", md: "lg" }}
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
-                colorScheme="gray"
+                borderColor="gray.400"
+                color="gray.700"
                 borderWidth="2px"
-                _disabled={{ opacity: 0.4 }}
+                _hover={{
+                  borderColor: "gray.600",
+                  color: "gray.800",
+                  bg: "gray.50"
+                }}
+                _disabled={{ 
+                  opacity: 0.4,
+                  color: "gray.400",
+                  borderColor: "gray.300"
+                }}
               >
                 <Icon as={FiArrowLeft} mr={2} />
                 <AnimatedButtonText animationKey={currentLanguage}>
