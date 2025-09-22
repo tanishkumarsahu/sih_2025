@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { UserProfile, InternshipRecommendation, RecommendationRequest, RecommendationResponse } from '@/types';
+import { RecommendationResponse } from '@/types';
 import { RecommendationRequestSchema } from '@/lib/validations';
 import { calculateRecommendations } from '@/services/recommendations';
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           error: 'Invalid request data',
-          details: validationResult.error.issues.map((err: any) => `${err.path.join('.')}: ${err.message}`)
+          details: validationResult.error.issues.map((err) => `${err.path.join('.')}: ${err.message}`)
         },
         { status: 400 }
       );

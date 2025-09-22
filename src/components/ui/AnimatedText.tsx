@@ -11,7 +11,18 @@ interface AnimatedTextProps {
   as?: 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   animationKey: string | number;
   duration?: number;
-  [key: string]: any; // For passing through other props like fontSize, color, etc.
+  fontSize?: string | object;
+  color?: string;
+  fontWeight?: string | number;
+  textAlign?: string;
+  mb?: number | string;
+  mt?: number | string;
+  lineHeight?: string | number;
+  letterSpacing?: string;
+  size?: string;
+  textShadow?: string;
+  maxW?: string | object;
+  px?: number | string | object;
 }
 
 export function AnimatedText({ 

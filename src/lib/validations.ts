@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EDUCATION_LEVELS, SECTORS, INDIAN_STATES } from '@/constants';
+// Removed unused imports: EDUCATION_LEVELS, SECTORS, INDIAN_STATES
 
 // User Profile Validation Schema - Made more flexible for form submission
 export const UserProfileSchema = z.object({
@@ -92,13 +92,13 @@ export const RecommendationResponseSchema = z.object({
     totalCount: z.number(),
     processingTime: z.number(),
     algorithmVersion: z.string(),
-    filters: z.any().optional(),
+    filters: z.record(z.string(), z.unknown()).optional(),
   }),
 });
 
 // API Response Schema
 export const ApiResponseSchema = z.object({
-  data: z.any().optional(),
+  data: z.unknown().optional(),
   error: z.string().optional(),
   message: z.string().optional(),
   status: z.number(),

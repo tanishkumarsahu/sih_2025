@@ -42,9 +42,10 @@ export const AuthButton: React.FC<AuthButtonProps> = ({ currentLanguage }) => {
           : 'Google के साथ सफलतापूर्वक साइन इन!',
         status: 'success',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Google sign-in error:', error);
-      if (error.code === 'auth/popup-closed-by-user') {
+      const authError = error as { code?: string; message?: string };
+      if (authError.code === 'auth/popup-closed-by-user') {
         toast.create({
           title: currentLanguage === 'en' ? 'Cancelled' : 'रद्द किया गया',
           description: currentLanguage === 'en' 

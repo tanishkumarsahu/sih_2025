@@ -161,9 +161,12 @@ export function useProfile(): UseProfileReturn {
     try {
       UserProfileSchema.parse(profile);
       return { isValid: true, errors: [] };
-    } catch (error: any) {
-      const errors = error.errors?.map((err: any) => `${err.path.join('.')}: ${err.message}`) || ['Invalid profile data'];
-      return { isValid: false, errors };
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'errors' in error && Array.isArray(error.errors)) {
+        const errors = error.errors.map((err: { path: string[]; message: string }) => `${err.path.join('.')}: ${err.message}`);
+        return { isValid: false, errors };
+      }
+      return { isValid: false, errors: ['Invalid profile data'] };
     }
   }, []);
 
@@ -183,7 +186,7 @@ export function useProfile(): UseProfileReturn {
 
 // Hook for form validation
 export function useProfileValidation() {
-  const validateField = useCallback((field: keyof UserProfile, value: any) => {
+  const validateField = useCallback((field: keyof UserProfile, value: unknown) => {
     try {
       const fieldSchema = UserProfileSchema.shape[field];
       if (fieldSchema) {
@@ -191,9 +194,11 @@ export function useProfileValidation() {
         return { isValid: true, error: null };
       }
       return { isValid: true, error: null };
-    } catch (error: any) {
-      const errorMessage = error.errors?.[0]?.message || 'Invalid value';
-      return { isValid: false, error: errorMessage };
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'errors' in error && Array.isArray(error.errors) && error.errors[0] && typeof error.errors[0] === 'object' && 'message' in error.errors[0]) {
+        return { isValid: false, error: error.errors[0].message as string };
+      }
+      return { isValid: false, error: 'Invalid value' };
     }
   }, []);
 

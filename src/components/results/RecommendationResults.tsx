@@ -20,17 +20,15 @@ import {
   FiMapPin, 
   FiDollarSign, 
   FiClock, 
-  FiUsers, 
   FiTrendingUp,
   FiExternalLink,
-  FiHeart,
   FiBookmark,
-  FiInfo
+  FiInfo,
+  FiArrowLeft
 } from 'react-icons/fi';
 import { InternshipRecommendation, UserProfile } from '@/types';
 
-const MotionBox = motion(Box);
-const MotionCard = motion(Card);
+const MotionBox = motion.create(Box);
 
 interface RecommendationResultsProps {
   recommendations: InternshipRecommendation[];
@@ -60,18 +58,21 @@ function FitMeter({ score, size = 'md' }: FitMeterProps) {
 
   return (
     <Box position="relative" w={sizeMap[size].w} h={sizeMap[size].h}>
-      <Progress
-        value={score}
-        colorScheme={getColor(score)}
-        size="lg"
-        borderRadius="full"
+      <Box
+        w="full"
+        h="8px"
         bg="gray.100"
-        sx={{
-          '& > div': {
-            borderRadius: 'full',
-          }
-        }}
-      />
+        borderRadius="full"
+        overflow="hidden"
+      >
+        <Box
+          h="full"
+          bg="brand.500"
+          borderRadius="full"
+          w={`${score}%`}
+          transition="width 0.3s"
+        />
+      </Box>
       <Text
         position="absolute"
         top="50%"
@@ -102,7 +103,7 @@ function InternshipCard({
   const [showDetails, setShowDetails] = useState(false);
   const toast = useToaster();
 
-  const handleBookmark = () => {
+  const handleBookmark = (id: string) => {
     setIsBookmarked(!isBookmarked);
     toast.create({
       title: isBookmarked 
@@ -121,177 +122,160 @@ function InternshipCard({
   };
 
   return (
-    <MotionCard
+    <MotionBox
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -5, boxShadow: 'xl' }}
-      size="lg"
-      variant="elevated"
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      whileHover={{ y: -2, boxShadow: 'lg' }}
       cursor="pointer"
-      onClick={() => setShowDetails(!showDetails)}
+      onClick={() => onApply(internship.id)}
+      p={6}
+      borderWidth={1}
+      borderRadius="lg"
+      bg="white"
+      shadow="sm"
     >
-      <CardBody p={6}>
-        <VStack align="stretch" gap={4}>
-          {/* Header */}
-          <Flex justify="space-between" align="start">
-            <VStack align="start" gap={2} flex={1}>
-              <HStack>
-                <Avatar size="sm" name={internship.company} src={internship.companyLogo} />
-                <VStack align="start" gap={0}>
-                  <Heading size="md" color="brand.600" noOfLines={1}>
-                    {internship.title}
-                  </Heading>
-                  <Text fontSize="sm" color="gray.600">
-                    {internship.company}
-                  </Text>
-                </VStack>
-              </HStack>
-            </VStack>
-            
-            <VStack align="end" gap={2}>
-              <FitMeter score={internship.matchScore || 75} size="md" />
-              <Text fontSize="xs" color="gray.500">
-                {currentLanguage === 'en' ? 'Fit Score' : 'फिट स्कोर'}
-              </Text>
-            </VStack>
-          </Flex>
-
-          {/* Key Details */}
-          <SimpleGrid columns={3} gap={4}>
-            <VStack gap={1}>
-              <HStack color="green.500">
-                <Icon as={FiDollarSign} />
-                <Text fontSize="sm" fontWeight="semibold">
-                  {formatStipend(internship.stipend)}
-                </Text>
-              </HStack>
-              <Text fontSize="xs" color="gray.500">
-                {currentLanguage === 'en' ? 'Stipend' : 'वेतन'}
-              </Text>
-            </VStack>
-
-            <VStack gap={1}>
-              <HStack color="blue.500">
-                <Icon as={FiMapPin} />
-                <Text fontSize="sm" fontWeight="semibold" noOfLines={1}>
-                  {internship.location}
-                </Text>
-              </HStack>
-              <Text fontSize="xs" color="gray.500">
-                {currentLanguage === 'en' ? 'Location' : 'स्थान'}
-              </Text>
-            </VStack>
-
-            <VStack gap={1}>
-              <HStack color="purple.500">
-                <Icon as={FiClock} />
-                <Text fontSize="sm" fontWeight="semibold">
-                  {internship.duration} {currentLanguage === 'en' ? 'months' : 'महीने'}
-                </Text>
-              </HStack>
-              <Text fontSize="xs" color="gray.500">
-                {currentLanguage === 'en' ? 'Duration' : 'अवधि'}
-              </Text>
-            </VStack>
-          </SimpleGrid>
-
-          {/* Description */}
-          <Text fontSize="sm" color="gray.700" noOfLines={showDetails ? undefined : 2}>
-            {internship.description}
-          </Text>
-
-          {/* Skills Match */}
-          <Box>
-            <Text fontSize="sm" fontWeight="semibold" mb={2} color="gray.700">
-              {currentLanguage === 'en' ? 'Matching Skills:' : 'मेल खाने वाले कौशल:'}
-            </Text>
-            <Flex wrap="wrap" gap={2}>
-              {internship.requirements?.slice(0, showDetails ? undefined : 3).map((skill: string, idx: number) => (
-                <Badge key={idx} colorScheme="brand" variant="subtle" fontSize="xs">
-                  {skill}
-                </Badge>
-              ))}
-              {!showDetails && (internship.requirements?.length || 0) > 3 && (
-                <Badge variant="outline" fontSize="xs">
-                  +{(internship.requirements?.length || 0) - 3} more
-                </Badge>
-              )}
-            </Flex>
+      <VStack align="stretch" gap={4}>
+        {/* Header */}
+        <HStack justify="space-between" align="start">
+          <Box
+            w={12}
+            h={12}
+            borderRadius="full"
+            bg="brand.50"
+            color="brand.600"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            fontWeight="bold"
+          >
+            {internship.company.charAt(0).toUpperCase()}
           </Box>
+          <VStack align="end" gap={1}>
+            <Heading size="md" color="brand.600">
+              {internship.title}
+            </Heading>
+            <Text fontSize="sm" color="gray.600" fontWeight="semibold">
+              {internship.company}
+            </Text>
+          </VStack>
+        </HStack>
 
-          {/* Why Recommended */}
-          {showDetails && internship.whyRecommended && (
-            <Box p={3} bg="blue.50" borderRadius="md" borderLeft="4px" borderColor="blue.400">
-              <HStack mb={2}>
-                <Icon as={FiInfo} color="blue.500" />
-                <Text fontSize="sm" fontWeight="semibold" color="blue.700">
-                  {currentLanguage === 'en' ? 'Why recommended for you:' : 'आपके लिए क्यों सुझाया गया:'}
-                </Text>
-              </HStack>
-              <Text fontSize="sm" color="blue.600">
-                {internship.whyRecommended}
+        {/* Key Details */}
+        <SimpleGrid columns={3} gap={4}>
+          <VStack gap={1}>
+            <HStack color="green.500">
+              <Icon as={FiDollarSign} />
+              <Text fontSize="sm" fontWeight="semibold">
+                {formatStipend(internship.stipend)}
               </Text>
-            </Box>
-          )}
-
-          <Divider />
-
-          {/* Action Buttons */}
-          <HStack justify="space-between">
-            <HStack gap={2}>
-              <Button
-                variant="ghost"
-                size="sm"
-                leftIcon={<Icon as={FiBookmark} />}
-                colorScheme={isBookmarked ? 'brand' : 'gray'}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleBookmark();
-                }}
-              >
-                {isBookmarked 
-                  ? (currentLanguage === 'en' ? 'Saved' : 'सेव किया गया')
-                  : (currentLanguage === 'en' ? 'Save' : 'सेव करें')
-                }
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDetails(!showDetails);
-                }}
-              >
-                {showDetails 
-                  ? (currentLanguage === 'en' ? 'Less Details' : 'कम विवरण')
-                  : (currentLanguage === 'en' ? 'More Details' : 'अधिक विवरण')
-                }
-              </Button>
             </HStack>
+            <Text fontSize="xs" color="gray.500">
+              {currentLanguage === 'en' ? 'Stipend' : 'वेतन'}
+            </Text>
+          </VStack>
 
+          <VStack gap={1}>
+            <HStack color="blue.500">
+              <Icon as={FiMapPin} />
+              <Text fontSize="sm" fontWeight="semibold">
+                {internship.location.length > 15 ? `${internship.location.slice(0, 15)}...` : internship.location}
+              </Text>
+            </HStack>
+            <Text fontSize="xs" color="gray.500">
+              {currentLanguage === 'en' ? 'Location' : 'स्थान'}
+            </Text>
+          </VStack>
+
+          <VStack gap={1}>
+            <HStack color="purple.500">
+              <Icon as={FiClock} />
+              <Text fontSize="sm" fontWeight="semibold">
+                {internship.duration} {currentLanguage === 'en' ? 'months' : 'महीने'}
+              </Text>
+            </HStack>
+            <Text fontSize="xs" color="gray.500">
+              {currentLanguage === 'en' ? 'Duration' : 'अवधि'}
+            </Text>
+          </VStack>
+        </SimpleGrid>
+
+        {/* Description */}
+        <Text fontSize="sm" color="gray.700" lineHeight="1.5">
+          {internship.description.length > 150 
+            ? `${internship.description.slice(0, 150)}...` 
+            : internship.description}
+        </Text>
+
+        {/* Skills Match */}
+        <Box>
+          <Text fontSize="sm" fontWeight="semibold" mb={2} color="gray.700">
+            {currentLanguage === 'en' ? 'Matching Skills:' : 'मेल खाने वाले कौशल:'}
+          </Text>
+          <Flex wrap="wrap" gap={2}>
+            {internship.requirements?.slice(0, showDetails ? undefined : 3).map((skill: string, idx: number) => (
+              <Badge key={idx} colorScheme="brand" variant="subtle" fontSize="xs">
+                {skill}
+              </Badge>
+            ))}
+            {!showDetails && (internship.requirements?.length || 0) > 3 && (
+              <Badge variant="outline" fontSize="xs">
+                +{(internship.requirements?.length || 0) - 3} more
+              </Badge>
+            )}
+          </Flex>
+        </Box>
+
+        {/* Action Buttons */}
+        <HStack justify="space-between">
+          <HStack gap={2}>
             <Button
-              colorScheme="brand"
-              size="md"
-              rightIcon={<Icon as={FiExternalLink} />}
+              variant="ghost"
+              size="sm"
+              colorScheme={isBookmarked ? 'brand' : 'gray'}
               onClick={(e) => {
                 e.stopPropagation();
-                onApply(internship.id);
+                handleBookmark(internship.id);
               }}
             >
-              {currentLanguage === 'en' ? 'Apply Now' : 'अभी आवेदन करें'}
+              <Icon as={FiBookmark} mr={2} />
+              {currentLanguage === 'en' ? 'Save' : 'सेव करें'}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDetails(!showDetails);
+              }}
+            >
+              {showDetails 
+                ? (currentLanguage === 'en' ? 'Less Details' : 'कम विवरण')
+                : (currentLanguage === 'en' ? 'More Details' : 'अधिक विवरण')
+              }
             </Button>
           </HStack>
-        </VStack>
-      </CardBody>
-    </MotionCard>
+
+          <Button
+            colorScheme="brand"
+            size="md"
+            onClick={(e) => {
+              e.stopPropagation();
+              onApply(internship.id);
+            }}
+          >
+            {currentLanguage === 'en' ? 'Apply Now' : 'अभी आवेदन करें'}
+            <Icon as={FiExternalLink} ml={2} />
+          </Button>
+        </HStack>
+      </VStack>
+    </MotionBox>
   );
 }
 
 export function RecommendationResults({ 
   recommendations, 
-  userProfile, 
   currentLanguage, 
   onApply,
   onBack 
@@ -387,19 +371,20 @@ export function RecommendationResults({
         {/* Footer Actions */}
         <HStack justify="center" pt={8} gap={4}>
           <Button
-            variant="outline"
+            colorScheme="brand"
             size="lg"
             onClick={onBack}
           >
-            {currentLanguage === 'en' ? 'Modify Profile' : 'प्रोफाइल संशोधित करें'}
+            <Icon as={FiArrowLeft} mr={2} />
+            {currentLanguage === 'en' ? 'Back to Profile' : 'प्रोफाइल पर वापस जाएं'}
           </Button>
           
           <Button
             colorScheme="brand"
             size="lg"
-            rightIcon={<Icon as={FiTrendingUp} />}
           >
             {currentLanguage === 'en' ? 'Get More Recommendations' : 'और सिफारिशें प्राप्त करें'}
+            <Icon as={FiTrendingUp} ml={2} />
           </Button>
         </HStack>
       </MotionBox>

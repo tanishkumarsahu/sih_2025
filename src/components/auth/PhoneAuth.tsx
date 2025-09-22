@@ -6,16 +6,8 @@ import {
   Button,
   Input,
   VStack,
-  Text,
   HStack,
-  PinInput,
-  PinInputField,
-  useToast,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  InputGroup,
-  InputLeftAddon,
+  Text,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FiPhone, FiCheck } from 'react-icons/fi';
@@ -36,19 +28,10 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
   const [isLoading, setIsLoading] = useState(false);
   
   const { signInWithPhone, verifyOTP, error, verificationId } = useAuth();
-  const toast = useToast();
 
   const handleSendOTP = async () => {
     if (!phoneNumber || phoneNumber.length < 10) {
-      toast({
-        title: currentLanguage === 'en' ? 'Invalid Phone Number' : 'अमान्य फोन नंबर',
-        description: currentLanguage === 'en' 
-          ? 'Please enter a valid 10-digit phone number' 
-          : 'कृपया एक मान्य 10-अंकीय फोन नंबर दर्ज करें',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.log('Invalid phone number');
       return;
     }
 
@@ -56,25 +39,8 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
       setIsLoading(true);
       await signInWithPhone(phoneNumber);
       setStep('otp');
-      toast({
-        title: currentLanguage === 'en' ? 'OTP Sent' : 'OTP भेजा गया',
-        description: currentLanguage === 'en' 
-          ? 'Please check your phone for the verification code' 
-          : 'कृपया सत्यापन कोड के लिए अपना फोन चेक करें',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: currentLanguage === 'en' ? 'Error' : 'त्रुटि',
-        description: currentLanguage === 'en' 
-          ? 'Failed to send OTP. Please try again.' 
-          : 'OTP भेजने में विफल। कृपया पुनः प्रयास करें।',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+    } catch {
+      console.log('Failed to send OTP');
     } finally {
       setIsLoading(false);
     }
@@ -82,63 +48,24 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
 
   const handleVerifyOTP = async () => {
     if (!otp || otp.length !== 6) {
-      toast({
-        title: currentLanguage === 'en' ? 'Invalid OTP' : 'अमान्य OTP',
-        description: currentLanguage === 'en' 
-          ? 'Please enter the complete 6-digit OTP' 
-          : 'कृपया पूरा 6-अंकीय OTP दर्ज करें',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.log('Invalid OTP');
       return;
     }
 
     if (!verificationId) {
-      toast({
-        title: currentLanguage === 'en' ? 'Error' : 'त्रुटि',
-        description: currentLanguage === 'en' 
-          ? 'Verification ID not found. Please try again.' 
-          : 'सत्यापन ID नहीं मिली। कृपया पुनः प्रयास करें।',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.log('No verification ID');
       return;
     }
 
     try {
       setIsLoading(true);
       await verifyOTP(verificationId, otp);
-      toast({
-        title: currentLanguage === 'en' ? 'Success' : 'सफलता',
-        description: currentLanguage === 'en' 
-          ? 'Phone number verified successfully!' 
-          : 'फोन नंबर सफलतापूर्वक सत्यापित!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
       onSuccess?.();
-    } catch (error) {
-      toast({
-        title: currentLanguage === 'en' ? 'Error' : 'त्रुटि',
-        description: currentLanguage === 'en' 
-          ? 'Invalid OTP. Please try again.' 
-          : 'अमान्य OTP। कृपया पुनः प्रयास करें।',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+    } catch {
+      console.log('OTP verification failed');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleResendOTP = async () => {
-    setStep('phone');
-    setOtp('');
-    await handleSendOTP();
   };
 
   return (
@@ -160,47 +87,38 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
               >
                 {currentLanguage === 'en' ? 'Sign in with Phone' : 'फोन से साइन इन करें'}
               </AnimatedText>
-              <AnimatedText
-                fontSize="sm"
-                color="gray.600"
-                animationKey={currentLanguage}
-                duration={0.25}
-              >
-                {currentLanguage === 'en' 
-                  ? 'We\'ll send you a verification code' 
-                  : 'हम आपको एक सत्यापन कोड भेजेंगे'}
-              </AnimatedText>
             </VStack>
 
-            <FormControl isInvalid={!!error}>
-              <FormLabel>
-                <AnimatedText animationKey={currentLanguage} duration={0.25}>
-                  {currentLanguage === 'en' ? 'Phone Number' : 'फोन नंबर'}
-                </AnimatedText>
-              </FormLabel>
-              <InputGroup>
-                <InputLeftAddon>+91</InputLeftAddon>
+            <Box w="full">
+              <Text mb={2}>
+                {currentLanguage === 'en' ? 'Phone Number' : 'फोन नंबर'}
+              </Text>
+              <HStack>
+                <Text>+91</Text>
                 <Input
                   type="tel"
-                  placeholder={currentLanguage === 'en' ? '9876543210' : '9876543210'}
+                  placeholder="9876543210"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   maxLength={10}
                 />
-              </InputGroup>
-              {error && <FormErrorMessage>{error}</FormErrorMessage>}
-            </FormControl>
+              </HStack>
+              {error && <Text color="red.500" fontSize="sm" mt={1}>{error}</Text>}
+            </Box>
 
             <Button
               colorScheme="brand"
               size="lg"
               w="full"
               onClick={handleSendOTP}
-              isLoading={isLoading}
-              leftIcon={<FiPhone />}
+              loading={isLoading}
+              disabled={true}
+              opacity={0.6}
+              cursor="not-allowed"
             >
+              <FiPhone style={{ marginRight: '8px' }} />
               <AnimatedButtonText animationKey={currentLanguage}>
-                {currentLanguage === 'en' ? 'Send OTP' : 'OTP भेजें'}
+                {currentLanguage === 'en' ? 'Send OTP (Disabled)' : 'OTP भेजें (अक्षम)'}
               </AnimatedButtonText>
             </Button>
           </>
@@ -215,41 +133,22 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
               >
                 {currentLanguage === 'en' ? 'Enter Verification Code' : 'सत्यापन कोड दर्ज करें'}
               </AnimatedText>
-              <AnimatedText
-                fontSize="sm"
-                color="gray.600"
-                animationKey={currentLanguage}
-                duration={0.25}
-              >
-                {currentLanguage === 'en' 
-                  ? `Code sent to +91${phoneNumber}` 
-                  : `+91${phoneNumber} पर कोड भेजा गया`}
-              </AnimatedText>
             </VStack>
 
-            <FormControl isInvalid={!!error}>
-              <FormLabel textAlign="center">
-                <AnimatedText animationKey={currentLanguage} duration={0.25}>
-                  {currentLanguage === 'en' ? '6-Digit OTP' : '6-अंकीय OTP'}
-                </AnimatedText>
-              </FormLabel>
-              <HStack justify="center">
-                <PinInput
-                  value={otp}
-                  onChange={setOtp}
-                  size="lg"
-                  type="number"
-                >
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                  <PinInputField />
-                </PinInput>
-              </HStack>
-              {error && <FormErrorMessage textAlign="center">{error}</FormErrorMessage>}
-            </FormControl>
+            <Box w="full">
+              <Text mb={2} textAlign="center">
+                {currentLanguage === 'en' ? '6-Digit OTP' : '6-अंकीय OTP'}
+              </Text>
+              <Input
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="123456"
+                maxLength={6}
+                textAlign="center"
+                fontSize="lg"
+              />
+              {error && <Text color="red.500" fontSize="sm" mt={1} textAlign="center">{error}</Text>}
+            </Box>
 
             <VStack gap={3} w="full">
               <Button
@@ -257,22 +156,25 @@ export const PhoneAuth: React.FC<PhoneAuthProps> = ({ currentLanguage, onSuccess
                 size="lg"
                 w="full"
                 onClick={handleVerifyOTP}
-                isLoading={isLoading}
-                leftIcon={<FiCheck />}
+                loading={isLoading}
+                disabled={true}
+                opacity={0.6}
+                cursor="not-allowed"
               >
+                <FiCheck style={{ marginRight: '8px' }} />
                 <AnimatedButtonText animationKey={currentLanguage}>
-                  {currentLanguage === 'en' ? 'Verify OTP' : 'OTP सत्यापित करें'}
+                  {currentLanguage === 'en' ? 'Verify OTP (Disabled)' : 'OTP सत्यापित करें (अक्षम)'}
                 </AnimatedButtonText>
               </Button>
 
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleResendOTP}
-                isDisabled={isLoading}
+                onClick={() => setStep('phone')}
+                disabled={isLoading}
               >
                 <AnimatedButtonText animationKey={currentLanguage}>
-                  {currentLanguage === 'en' ? 'Resend OTP' : 'OTP पुनः भेजें'}
+                  {currentLanguage === 'en' ? 'Back' : 'वापस'}
                 </AnimatedButtonText>
               </Button>
             </VStack>

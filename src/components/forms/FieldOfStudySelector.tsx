@@ -10,9 +10,7 @@ import {
   Input,
   Icon,
   Badge,
-  Flex,
   useBreakpointValue,
-  Collapse,
   IconButton,
 } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -10,16 +10,13 @@ import {
   Icon,
   Badge,
   useBreakpointValue,
-  Flex,
 } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiUpload, 
-  FiFile, 
   FiX, 
   FiCheck, 
-  FiAlertCircle,
-  FiDownload 
+  FiAlertCircle
 } from 'react-icons/fi';
 import { AnimatedText } from '../ui/AnimatedText';
 
@@ -55,7 +52,6 @@ interface ResumeUploadProps {
 }
 
 export const ResumeUpload: React.FC<ResumeUploadProps> = ({
-  value,
   onChange,
   language,
   error,

@@ -21,7 +21,6 @@ import {
   FiUsers, 
   FiTrendingUp,
   FiExternalLink,
-  FiHeart,
   FiBookmark,
   FiArrowLeft,
 } from 'react-icons/fi';

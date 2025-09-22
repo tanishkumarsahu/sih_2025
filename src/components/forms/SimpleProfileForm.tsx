@@ -12,14 +12,11 @@ import {
   SimpleGrid,
   Icon,
   Badge,
-  Stack,
-  Flex,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiUser, FiBook, FiTool, FiHeart, FiMapPin, FiCheck, FiStar, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { UserProfile } from '@/types';
-import { INDIAN_STATES } from '@/constants';
 import FieldOfStudySelector from './FieldOfStudySelector';
 import ResumeUpload from './ResumeUpload';
 import { AnimatedText, AnimatedButtonText } from '../ui/AnimatedText';
@@ -191,7 +188,7 @@ export function SimpleProfileForm({ onComplete, currentLanguage }: SimpleProfile
     }
   };
 
-  const updateProfile = (field: string, value: any) => {
+  const updateProfile = (field: string, value: unknown) => {
     setProfile(prev => ({ ...prev, [field]: value }));
     // Clear error when field is updated
     if (errors[field]) {

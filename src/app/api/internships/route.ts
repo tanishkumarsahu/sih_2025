@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           error: 'Invalid internship data',
-          details: validationResult.error.issues.map((err: any) => `${err.path.join('.')}: ${err.message}`)
+          details: validationResult.error.issues.map((err) => `${err.path.join('.')}: ${err.message}`)
         },
         { status: 400 }
       );

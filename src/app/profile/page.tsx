@@ -7,7 +7,7 @@ import { SimpleRecommendationResults } from '@/components/results/SimpleRecommen
 import { UserProfile, InternshipRecommendation } from '@/types';
 
 export default function ProfilePage() {
-  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'hi'>('en');
+  const [currentLanguage] = useState<'en' | 'hi'>('en');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [recommendations, setRecommendations] = useState<InternshipRecommendation[]>([]);
   const [isLoading, setIsLoading] = useState(false);

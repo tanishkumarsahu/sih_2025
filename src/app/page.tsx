@@ -4,7 +4,6 @@ import {
   Box,
   Container,
   Heading,
-  Text,
   Button,
   VStack,
   HStack,
@@ -14,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { FiTarget, FiUsers, FiTrendingUp, FiMapPin, FiArrowRight, FiStar } from 'react-icons/fi';
+import { FiUsers, FiTrendingUp, FiMapPin, FiTarget, FiStar } from 'react-icons/fi';
 import { AuthButton } from '@/components/auth/AuthButton';
 import { FloatingElements } from '@/components/ui/FloatingElements';
 import { GlowingStats } from '@/components/ui/GlowingStats';
@@ -23,9 +22,6 @@ import { AnimatedCard } from '@/components/ui/AnimatedCard';
 
 const MotionBox = motion(Box);
 const MotionVStack = motion(VStack);
-const MotionHStack = motion(HStack);
-const MotionText = motion(Text);
-const MotionHeading = motion(Heading);
 const MotionButton = motion(Button);
 
 export default function Home() {
@@ -72,7 +68,7 @@ export default function Home() {
   
   const heroInView = useInView(heroRef, { once: true });
   const featuresInView = useInView(featuresRef, { once: true });
-  const statsInView = useInView(statsRef, { once: true });
+  useInView(statsRef, { once: true });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -93,14 +89,6 @@ export default function Home() {
     }
   };
 
-  const floatingAnimation = {
-    y: [-10, 10, -10],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  };
 
   return (
     <Box bg="linear-gradient(135deg, #1A365D 0%, #2C5282 100%)" minH="100vh" position="relative" overflow="hidden">

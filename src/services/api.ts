@@ -1,4 +1,4 @@
-import { UserProfile, InternshipRecommendation, RecommendationRequest, RecommendationResponse, ApiResponse } from '@/types';
+import { UserProfile, RecommendationRequest, RecommendationResponse, ApiResponse } from '@/types';
 import { API_ENDPOINTS } from '@/constants';
 
 // Base API configuration
@@ -57,8 +57,8 @@ export const recommendationsApi = {
   },
 
   // Get API info
-  getInfo: async (): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(API_ENDPOINTS.RECOMMENDATIONS, {
+  getInfo: async (): Promise<ApiResponse<Record<string, unknown>>> => {
+    return apiRequest<Record<string, unknown>>(API_ENDPOINTS.RECOMMENDATIONS, {
       method: 'GET',
     });
   },
@@ -67,38 +67,38 @@ export const recommendationsApi = {
 // Internships API
 export const internshipsApi = {
   // Get all internships
-  getAll: async (): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(API_ENDPOINTS.INTERNSHIPS, {
+  getAll: async (): Promise<ApiResponse<unknown[]>> => {
+    return apiRequest<unknown[]>(API_ENDPOINTS.INTERNSHIPS, {
       method: 'GET',
     });
   },
 
   // Get internship by ID
-  getById: async (id: string): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
+  getById: async (id: string): Promise<ApiResponse<Record<string, unknown>>> => {
+    return apiRequest<Record<string, unknown>>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
       method: 'GET',
     });
   },
 
   // Create new internship
-  create: async (internship: any): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(API_ENDPOINTS.INTERNSHIPS, {
+  create: async (internship: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
+    return apiRequest<Record<string, unknown>>(API_ENDPOINTS.INTERNSHIPS, {
       method: 'POST',
       body: JSON.stringify(internship),
     });
   },
 
   // Update internship
-  update: async (id: string, internship: any): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
+  update: async (id: string, internship: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
+    return apiRequest<Record<string, unknown>>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(internship),
     });
   },
 
   // Delete internship
-  delete: async (id: string): Promise<ApiResponse<any>> => {
-    return apiRequest<any>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
+  delete: async (id: string): Promise<ApiResponse<Record<string, unknown>>> => {
+    return apiRequest<Record<string, unknown>>(`${API_ENDPOINTS.INTERNSHIPS}/${id}`, {
       method: 'DELETE',
     });
   },

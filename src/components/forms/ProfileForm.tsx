@@ -13,23 +13,22 @@ import {
   Icon,
   Badge,
   Stack,
+  Progress,
   FormControl,
   FormLabel,
   Select,
   RadioGroup,
   Radio,
   Checkbox,
-  Progress,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FiUser, 
   FiBook, 
   FiTool, 
   FiHeart, 
-  FiMapPin, 
-  FiGlobe,
+  FiMapPin,
   FiArrowRight,
   FiArrowLeft,
   FiCheck
@@ -162,7 +161,7 @@ export function ProfileForm({ onComplete, currentLanguage }: ProfileFormProps) {
     }
   };
 
-  const updateProfile = (field: string, value: any) => {
+  const updateProfile = (field: string, value: unknown) => {
     setProfile(prev => ({ ...prev, [field]: value }));
   };
 

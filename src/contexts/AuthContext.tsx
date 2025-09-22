@@ -77,9 +77,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
       
       setVerificationId(confirmationResult.verificationId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Phone sign-in error:', err);
-      setError(err.message || 'Failed to send OTP');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send OTP';
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -97,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Save user data to Firestore
       await saveUserToFirestore(result.user);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('OTP verification error:', err);
       setError('Invalid OTP. Please try again.');
       throw err;
@@ -120,12 +121,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Save user data to Firestore
       await saveUserToFirestore(result.user);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Google sign-in error:', err);
-      if (err.code === 'auth/popup-closed-by-user') {
+      if (err && typeof err === 'object' && 'code' in err && err.code === 'auth/popup-closed-by-user') {
         setError('Sign-in cancelled');
       } else {
-        setError(err.message || 'Failed to sign in with Google');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to sign in with Google';
+        setError(errorMessage);
       }
       throw err;
     } finally {
@@ -173,9 +175,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
       setVerificationId(null);
       setError(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Sign out error:', err);
-      setError(err.message || 'Failed to sign out');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to sign out';
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);

@@ -44,6 +44,10 @@ interface ToasterProviderProps {
 export const ToasterProvider: React.FC<ToasterProviderProps> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  const dismiss = useCallback((id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, []);
+
   const create = useCallback((toast: Omit<Toast, 'id'>) => {
     const id = Math.random().toString(36).substr(2, 9);
     const newToast: Toast = {
@@ -60,11 +64,7 @@ export const ToasterProvider: React.FC<ToasterProviderProps> = ({ children }) =>
         dismiss(id);
       }, newToast.duration);
     }
-  }, []);
-
-  const dismiss = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
+  }, [dismiss]);
 
   const getStatusColor = (status: Toast['status']) => {
     switch (status) {

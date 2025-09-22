@@ -6,8 +6,6 @@ import {
   Button,
   VStack,
   Text,
-  useToast,
-  Divider,
   HStack,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
@@ -24,33 +22,16 @@ interface GoogleAuthProps {
 
 export const GoogleAuth: React.FC<GoogleAuthProps> = ({ currentLanguage, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { signInWithGoogle, error } = useAuth();
-  const toast = useToast();
+  const { signInWithGoogle, loading } = useAuth();
 
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
       await signInWithGoogle();
-      toast({
-        title: currentLanguage === 'en' ? 'Success' : 'सफलता',
-        description: currentLanguage === 'en' 
-          ? 'Successfully signed in with Google!' 
-          : 'Google के साथ सफलतापूर्वक साइन इन!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.log('Successfully signed in with Google!');
       onSuccess?.();
-    } catch (error) {
-      toast({
-        title: currentLanguage === 'en' ? 'Error' : 'त्रुटि',
-        description: currentLanguage === 'en' 
-          ? 'Failed to sign in with Google. Please try again.' 
-          : 'Google के साथ साइन इन करने में विफल। कृपया पुनः प्रयास करें।',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+    } catch (err) {
+      console.error('Google sign-in error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -64,8 +45,12 @@ export const GoogleAuth: React.FC<GoogleAuthProps> = ({ currentLanguage, onSucce
       w="full"
     >
       <VStack gap={4} w="full">
-        <HStack w="full" align="center">
-          <Divider />
+        <HStack align="center" w="full">
+          <Box h="1px" bg="gray.300" flex="1" />
+          <Text fontSize="sm" color="gray.500" px={3}>
+            {currentLanguage === 'en' ? 'OR' : 'या'}
+          </Text>
+          <Box h="1px" bg="gray.300" flex="1" />
           <AnimatedText
             fontSize="sm"
             color="gray.500"
@@ -76,7 +61,7 @@ export const GoogleAuth: React.FC<GoogleAuthProps> = ({ currentLanguage, onSucce
           >
             {currentLanguage === 'en' ? 'Or continue with' : 'या जारी रखें'}
           </AnimatedText>
-          <Divider />
+          <Box h="1px" bg="gray.300" flex="1" />
         </HStack>
 
         <Button
@@ -84,8 +69,7 @@ export const GoogleAuth: React.FC<GoogleAuthProps> = ({ currentLanguage, onSucce
           w="full"
           variant="outline"
           onClick={handleGoogleSignIn}
-          isLoading={isLoading}
-          leftIcon={<FcGoogle size="20" />}
+          loading={isLoading || loading}
           _hover={{
             bg: 'gray.50',
             transform: 'translateY(-1px)',
@@ -93,16 +77,14 @@ export const GoogleAuth: React.FC<GoogleAuthProps> = ({ currentLanguage, onSucce
           }}
           transition="all 0.2s"
         >
-          <AnimatedButtonText animationKey={currentLanguage}>
-            {currentLanguage === 'en' ? 'Continue with Google' : 'Google के साथ जारी रखें'}
-          </AnimatedButtonText>
+          <HStack gap={2}>
+            <FcGoogle size="20" />
+            <AnimatedButtonText animationKey={currentLanguage}>
+              {currentLanguage === 'en' ? 'Continue with Google' : 'Google के साथ जारी रखें'}
+            </AnimatedButtonText>
+          </HStack>
         </Button>
 
-        {error && (
-          <Text color="red.500" fontSize="sm" textAlign="center">
-            {error}
-          </Text>
-        )}
       </VStack>
     </MotionBox>
   );
