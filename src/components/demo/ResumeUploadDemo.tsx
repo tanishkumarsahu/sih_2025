@@ -10,12 +10,11 @@ import {
   Text,
   Button,
   Badge,
+  Icon,
   useBreakpointValue,
-  Alert,
-  AlertIcon,
-  AlertDescription,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { FiAlertCircle } from 'react-icons/fi';
 import ResumeUpload from '../forms/ResumeUpload';
 
 const MotionBox = motion.create(Box);
@@ -194,12 +193,21 @@ export const ResumeUploadDemo: React.FC = () => {
 
         {/* Error Display */}
         {error && (
-          <Alert status="error" mt={6} borderRadius="lg">
-            <AlertIcon />
-            <AlertDescription>
-              {error}
-            </AlertDescription>
-          </Alert>
+          <Box
+            mt={6}
+            p={4}
+            bg="red.50"
+            border="1px solid"
+            borderColor="red.200"
+            borderRadius="lg"
+          >
+            <HStack gap={2}>
+              <Icon as={FiAlertCircle} color="red.500" />
+              <Text color="red.700">
+                {error}
+              </Text>
+            </HStack>
+          </Box>
         )}
 
         {/* Features List */}

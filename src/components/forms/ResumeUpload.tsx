@@ -8,10 +8,6 @@ import {
   Text,
   Button,
   Icon,
-  Progress,
-  Alert,
-  AlertIcon,
-  AlertDescription,
   Badge,
   useBreakpointValue,
   Flex,
@@ -394,7 +390,7 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
                       fontSize={fontSize}
                       fontWeight="medium"
                       color="gray.800"
-                      noOfLines={1}
+                      truncate
                       title={uploadedFile.file.name}
                     >
                       {uploadedFile.file.name}
@@ -432,13 +428,21 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
               {/* Progress Bar */}
               {uploadedFile.status === 'uploading' && (
                 <Box mb={2}>
-                  <Progress
-                    value={uploadedFile.uploadProgress}
-                    colorScheme="brand"
-                    size="sm"
-                    borderRadius="full"
+                  <Box
+                    w="full"
+                    h="6px"
                     bg="gray.200"
-                  />
+                    borderRadius="full"
+                    overflow="hidden"
+                  >
+                    <Box
+                      h="full"
+                      bg="orange.500"
+                      borderRadius="full"
+                      transition="width 0.3s ease"
+                      w={`${uploadedFile.uploadProgress}%`}
+                    />
+                  </Box>
                   <Text fontSize="xs" color="gray.600" mt={1} textAlign="center">
                     {Math.round(uploadedFile.uploadProgress)}%
                   </Text>
@@ -471,12 +475,21 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
 
       {/* Error Message */}
       {currentError && (
-        <Alert status="error" mt={3} borderRadius="lg">
-          <AlertIcon />
-          <AlertDescription fontSize="sm">
-            {currentError}
-          </AlertDescription>
-        </Alert>
+        <Box
+          mt={3}
+          p={3}
+          bg="red.50"
+          border="1px solid"
+          borderColor="red.200"
+          borderRadius="lg"
+        >
+          <HStack gap={2}>
+            <Icon as={FiAlertCircle} color="red.500" />
+            <Text fontSize="sm" color="red.700">
+              {currentError}
+            </Text>
+          </HStack>
+        </Box>
       )}
 
       {/* Help Text */}
