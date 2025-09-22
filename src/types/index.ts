@@ -86,11 +86,11 @@ export interface RecommendationResponse {
     totalCount: number;
     processingTime: number;
     algorithmVersion: string;
-    filters?: any;
+    filters?: Record<string, unknown>;
   };
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   message?: string;

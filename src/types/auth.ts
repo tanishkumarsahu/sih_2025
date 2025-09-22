@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+// Firebase auth types
 
 export interface AuthUser {
   uid: string;
