@@ -21,6 +21,7 @@ export const UserProfileSchema = z.object({
   experience: z.string().optional(),
   languagePreference: z.enum(['en', 'hi']),
   openToRemote: z.boolean().optional(),
+  resume: z.instanceof(File).nullable().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
   accessibility: z.array(z.string()).optional(),

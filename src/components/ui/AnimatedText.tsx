@@ -4,7 +4,7 @@ import { Box, Text, Heading } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ReactNode } from 'react';
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 interface AnimatedTextProps {
   children: ReactNode;

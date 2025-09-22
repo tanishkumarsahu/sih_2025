@@ -17,22 +17,15 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { AnimatedText, AnimatedButtonText } from '@/components/ui/AnimatedText';
-import { 
-  FiUser, 
-  FiBook, 
-  FiTool, 
-  FiHeart, 
-  FiMapPin, 
-  FiArrowRight,
-  FiArrowLeft,
-  FiCheck,
-  FiStar
-} from 'react-icons/fi';
+import { FiUser, FiBook, FiTool, FiHeart, FiMapPin, FiCheck, FiStar, FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { UserProfile } from '@/types';
+import { INDIAN_STATES } from '@/constants';
+import FieldOfStudySelector from './FieldOfStudySelector';
+import ResumeUpload from './ResumeUpload';
+import { AnimatedText, AnimatedButtonText } from '../ui/AnimatedText';
 
-const MotionBox = motion(Box);
-const MotionVStack = motion(VStack);
+const MotionBox = motion.create(Box);
+const MotionVStack = motion.create(VStack);
 
 /**
  * SimpleProfileForm with animated text and streamlined interface
@@ -71,26 +64,7 @@ const skillOptions = {
   hi: ['प्रोग्रामिंग', 'डेटा विश्लेषण', 'वेब डेवलपमेंट', 'मोबाइल ऐप्स', 'डिजिटल मार्केटिंग', 'बिक्री', 'मार्केटिंग', 'वित्त', 'संचालन', 'ग्राहक सेवा', 'डिज़ाइन', 'लेखन', 'फोटोग्राफी', 'वीडियो संपादन', 'कला']
 };
 
-const fieldOfStudyOptions = {
-  en: [
-    'Computer Science', 'Information Technology', 'Electronics', 'Mechanical Engineering',
-    'Civil Engineering', 'Business Administration', 'Commerce', 'Economics', 'Finance',
-    'Marketing', 'Arts', 'Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology',
-    'English Literature', 'Psychology', 'Sociology', 'Political Science', 'History',
-    'Geography', 'Philosophy', 'Law', 'Medicine', 'Nursing', 'Pharmacy', 'Architecture',
-    'Design', 'Mass Communication', 'Journalism', 'Hotel Management', 'Agriculture',
-    'Biotechnology', 'Environmental Science', 'Others'
-  ],
-  hi: [
-    'कंप्यूटर साइंस', 'सूचना प्रौद्योगिकी', 'इलेक्ट्रॉनिक्स', 'मैकेनिकल इंजीनियरिंग',
-    'सिविल इंजीनियरिंग', 'व्यवसाय प्रशासन', 'वाणिज्य', 'अर्थशास्त्र', 'वित्त',
-    'मार्केटिंग', 'कला', 'विज्ञान', 'गणित', 'भौतिकी', 'रसायन', 'जीव विज्ञान',
-    'अंग्रेजी साहित्य', 'मनोविज्ञान', 'समाजशास्त्र', 'राजनीति विज्ञान', 'इतिहास',
-    'भूगोल', 'दर्शन', 'कानून', 'चिकित्सा', 'नर्सिंग', 'फार्मेसी', 'वास्तुकला',
-    'डिज़ाइन', 'मास कम्युनिकेशन', 'पत्रकारिता', 'होटल प्रबंधन', 'कृषि',
-    'बायोटेक्नोलॉजी', 'पर्यावरण विज्ञान', 'अन्य'
-  ]
-};
+// Field of study options moved to FieldOfStudySelector component
 
 const interestSectors = {
   en: [
@@ -123,7 +97,6 @@ export function SimpleProfileForm({ onComplete, currentLanguage }: SimpleProfile
     languagePreference: currentLanguage,
     location: { state: '', city: '' },
   });
-  const [showCustomField, setShowCustomField] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const steps = [
@@ -387,6 +360,16 @@ export function SimpleProfileForm({ onComplete, currentLanguage }: SimpleProfile
                 </Button>
               </HStack>
             </Box>
+
+            <Box w="full">
+              <ResumeUpload
+                value={profile.resume || null}
+                onChange={(file) => updateProfile('resume', file)}
+                language={currentLanguage}
+                error={errors.resume}
+                isRequired={false}
+              />
+            </Box>
           </VStack>
         );
 
@@ -447,69 +430,13 @@ export function SimpleProfileForm({ onComplete, currentLanguage }: SimpleProfile
                 {currentLanguage === 'en' ? 'Field of Study' : 'अध्ययन क्षेत्र'}
               </AnimatedText>
               
-              <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} gap={2} mb={4}>
-                {fieldOfStudyOptions[currentLanguage].map((field) => (
-                  <Button
-                    key={field}
-                    variant={profile.fieldOfStudy === field ? 'solid' : 'outline'}
-                    size="sm"
-                    onClick={() => {
-                      if (field === (currentLanguage === 'en' ? 'Others' : 'अन्य')) {
-                        setShowCustomField(true);
-                        updateProfile('fieldOfStudy', '');
-                      } else {
-                        setShowCustomField(false);
-                        updateProfile('fieldOfStudy', field);
-                      }
-                    }}
-                    bg={profile.fieldOfStudy === field ? 'orange.500' : 'white'}
-                    color={profile.fieldOfStudy === field ? 'white' : 'gray.700'}
-                    borderColor={profile.fieldOfStudy === field ? 'orange.500' : 'gray.300'}
-                    borderWidth="1px"
-                    fontSize="xs"
-                    h="auto"
-                    py={2}
-                    px={3}
-                    _hover={{
-                      bg: profile.fieldOfStudy === field ? 'orange.600' : 'gray.50',
-                      borderColor: profile.fieldOfStudy === field ? 'orange.600' : 'gray.400'
-                    }}
-                    transition="all 0.2s ease"
-                    fontWeight="medium"
-                  >
-                    {field}
-                  </Button>
-                ))}
-              </SimpleGrid>
-
-              {showCustomField && (
-                <Input
-                  size="lg"
-                  placeholder={currentLanguage === 'en' ? 'Enter your field of study' : 'अपना अध्ययन क्षेत्र दर्ज करें'}
-                  value={profile.fieldOfStudy || ''}
-                  onChange={(e) => updateProfile('fieldOfStudy', e.target.value)}
-                  bg="gray.50"
-                  color="gray.900"
-                  borderColor={errors.fieldOfStudy ? 'red.500' : 'gray.300'}
-                  borderWidth="2px"
-                  borderRadius="xl"
-                  _placeholder={{ color: "gray.500" }}
-                  _hover={{ borderColor: "gray.400", bg: "white" }}
-                  _focus={{
-                    borderColor: "orange.500",
-                    boxShadow: "0 0 0 3px rgba(255, 153, 51, 0.1)",
-                    bg: "white"
-                  }}
-                  transition="all 0.2s"
-                  fontWeight="medium"
-                />
-              )}
-              
-              {errors.fieldOfStudy && (
-                <Text color="red.500" fontSize="sm" mt={1}>
-                  {errors.fieldOfStudy}
-                </Text>
-              )}
+              <FieldOfStudySelector
+                value={profile.fieldOfStudy || ''}
+                onChange={(value) => updateProfile('fieldOfStudy', value)}
+                language={currentLanguage}
+                error={errors.fieldOfStudy}
+                isRequired={true}
+              />
             </Box>
           </VStack>
         );

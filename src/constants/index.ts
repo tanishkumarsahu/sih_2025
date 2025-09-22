@@ -95,3 +95,6 @@ export const MAX_INTERESTS_SELECTION = 3;
 export type EducationLevel = typeof EDUCATION_LEVELS[number];
 export type Sector = typeof SECTORS[number];
 export type IndianState = typeof INDIAN_STATES[number];
+
+// Re-export field of study categories
+export * from './fieldOfStudy';

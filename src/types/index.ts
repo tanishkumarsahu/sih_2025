@@ -19,6 +19,7 @@ export interface UserProfile {
   experience?: string;
   languagePreference: 'en' | 'hi';
   openToRemote?: boolean;
+  resume?: File | null;
   createdAt?: Date;
   updatedAt?: Date;
   accessibility?: string[];
